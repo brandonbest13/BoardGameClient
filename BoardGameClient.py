@@ -1,15 +1,17 @@
 import sys
 import sqlite3
+
 ## Change these::
 from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from PyQt5.QtGui import * #QWidget, 
 from PyQt5.Qt import *
+
 
 class stackedExample(QWidget):
 
    def __init__(self):
       super(stackedExample, self).__init__()
-
+      self.conn = sqlite3.connect("GT_GGI.db")
       self.stack0 = QWidget()
       self.stack1 = QWidget()
       self.stack2 = QWidget()
@@ -65,6 +67,28 @@ class stackedExample(QWidget):
 
    def display(self,i):
       self.Stack.setCurrentIndex(i)
+      
+    """ sqlite elements/methods
+    """
+    def genDB(self):
+         sql = """ CREATE TABLE IF NOT EXISTS BoardGames (
+            GameID int PRIMARY KEY,
+            Title varchar(255) NOT NULL,
+            Condition int,
+            Rating int,
+            Avail boolean,
+            Img text);
+            """
+         cur = self.conn.cursor()
+         cur.execute(sql)
+   
+   def selectColumn(self, str):
+      cur = self.conn.cursor()
+      sql = "SELECT {} FROM BoardGames".format(str)
+      return cur.execute(sql).fetchall()
+   
+   
+   
 
 def main():
    app = QApplication([])
